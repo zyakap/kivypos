@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     
     steps:
     - name: Checkout code
@@ -40,12 +40,14 @@ jobs:
         python -m pip install --upgrade pip
         pip install buildozer cython
     
-    - name: Fix autotools for libffi
+    - name: Fix libffi compilation issues
       run: |
-        # Update autotools to fix libffi compilation issues
-        sudo apt-get install -y libtool-bin
+        # Install additional autotools and fix libffi issues
+        sudo apt-get install -y libtool-bin autotools-dev
         # Set environment variables to help with autotools
         echo "ACLOCAL_PATH=/usr/share/aclocal" >> $GITHUB_ENV
+        # Pre-install system libffi to avoid compilation issues
+        sudo apt-get install -y libffi8 libffi-dev
     
     - name: Setup Android SDK manually
       run: |
