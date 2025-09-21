@@ -135,8 +135,22 @@ jobs:
       run: |
         # Start the build process
         buildozer android debug || {
-          echo "Build failed, attempting to patch PyJNIus and retry..."
-          python fix_pyjnius.py
+          echo "Build failed, checking for common issues..."
+          
+          # Check for PyJNIus issues and patch if needed
+          if grep -r "undeclared name not builtin: long" .buildozer/; then
+            echo "PyJNIus long type issue detected, applying patch..."
+            python fix_pyjnius.py
+          fi
+          
+          # Check for XML entity issues and fix if needed
+          if find .buildozer -name "strings.xml" -exec grep -l "&" {} \; 2>/dev/null; then
+            echo "XML entity issues detected, fixing..."
+            find .buildozer -name "strings.xml" -exec sed -i 's/&\([^#a-zA-Z0-9]\)/\&amp;\1/g' {} \; 2>/dev/null || true
+            find .buildozer -name "strings.xml" -exec sed -i 's/&$/\&amp;/g' {} \; 2>/dev/null || true
+          fi
+          
+          # Retry the build
           buildozer android debug
         }
     
