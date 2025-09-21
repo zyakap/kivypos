@@ -26,8 +26,9 @@ jobs:
         sudo apt-get install -y build-essential git unzip openjdk-17-jdk
         sudo apt-get install -y python3-dev libffi-dev libssl-dev
         sudo apt-get install -y zlib1g-dev libjpeg-dev libfreetype6-dev
-        sudo apt-get install -y autoconf libtool pkg-config
+        sudo apt-get install -y autoconf automake libtool pkg-config
         sudo apt-get install -y gcc-multilib g++-multilib
+        sudo apt-get install -y m4 texinfo gettext
     
     - name: Set up Java environment
       run: |
@@ -38,6 +39,13 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install buildozer cython
+    
+    - name: Fix autotools for libffi
+      run: |
+        # Update autotools to fix libffi compilation issues
+        sudo apt-get install -y libtool-bin
+        # Set environment variables to help with autotools
+        echo "ACLOCAL_PATH=/usr/share/aclocal" >> $GITHUB_ENV
     
     - name: Setup Android SDK manually
       run: |
