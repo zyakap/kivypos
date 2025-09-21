@@ -44,13 +44,9 @@ jobs:
         # Set up Android SDK environment variables
         echo "ANDROID_SDK_ROOT=$HOME/.buildozer/android/platform/android-sdk" >> $GITHUB_ENV
         echo "ANDROID_HOME=$HOME/.buildozer/android/platform/android-sdk" >> $GITHUB_ENV
-        echo "$HOME/.buildozer/android/platform/android-sdk/cmdline-tools/tools/bin" >> $GITHUB_PATH
-        echo "$HOME/.buildozer/android/platform/android-sdk/platform-tools" >> $GITHUB_PATH
         
-        # Create directories for SDK licenses
+        # Pre-create SDK licenses directory and accept licenses
         mkdir -p $HOME/.buildozer/android/platform/android-sdk/licenses
-        
-        # Accept all Android SDK licenses automatically
         echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > $HOME/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
         echo "84831b9409646a918e30573bab4c9c91346d8abd" > $HOME/.buildozer/android/platform/android-sdk/licenses/android-sdk-preview-license
         echo "d975f751698a77b662f1254ddbeed3901e976f5a" > $HOME/.buildozer/android/platform/android-sdk/licenses/intel-android-extra-license
