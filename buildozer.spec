@@ -1,7 +1,7 @@
 [app]
 
 # (str) Title of your application
-title = Store POS & Inventory
+title = Store POS
 
 # (str) Package name
 package.name = storepos
