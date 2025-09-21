@@ -39,13 +39,13 @@ jobs:
         pip install buildozer cython
     
     - name: Cache Buildozer global directory
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: .buildozer_global
         key: buildozer-global-${{ hashFiles('buildozer.spec') }}
     
     - name: Cache Buildozer directory
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: .buildozer
         key: buildozer-${{ hashFiles('buildozer.spec') }}
@@ -55,7 +55,7 @@ jobs:
         buildozer android debug
     
     - name: Upload APK artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: store-pos-android-apk
         path: bin/*.apk
@@ -63,7 +63,7 @@ jobs:
     
     - name: Upload build logs
       if: always()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: build-logs
         path: .buildozer/android/platform/build-*/logs/
