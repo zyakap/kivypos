@@ -39,17 +39,32 @@ jobs:
         python -m pip install --upgrade pip
         pip install buildozer cython
     
-    - name: Setup Android SDK and accept licenses
+    - name: Setup Android SDK manually
       run: |
-        # Set up Android SDK environment variables
+        # Create SDK directory structure
+        mkdir -p $HOME/.buildozer/android/platform/android-sdk
+        cd $HOME/.buildozer/android/platform/android-sdk
+        
+        # Download and setup command line tools
+        wget -q https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip
+        unzip -q commandlinetools-linux-8512546_latest.zip
+        mkdir -p cmdline-tools/latest
+        mv cmdline-tools/* cmdline-tools/latest/ 2>/dev/null || true
+        
+        # Create the old tools directory structure that buildozer expects
+        mkdir -p tools/bin
+        ln -sf ../../cmdline-tools/latest/bin/sdkmanager tools/bin/sdkmanager
+        ln -sf ../../cmdline-tools/latest/bin/avdmanager tools/bin/avdmanager
+        
+        # Set environment variables
         echo "ANDROID_SDK_ROOT=$HOME/.buildozer/android/platform/android-sdk" >> $GITHUB_ENV
         echo "ANDROID_HOME=$HOME/.buildozer/android/platform/android-sdk" >> $GITHUB_ENV
         
-        # Pre-create SDK licenses directory and accept licenses
-        mkdir -p $HOME/.buildozer/android/platform/android-sdk/licenses
-        echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > $HOME/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
-        echo "84831b9409646a918e30573bab4c9c91346d8abd" > $HOME/.buildozer/android/platform/android-sdk/licenses/android-sdk-preview-license
-        echo "d975f751698a77b662f1254ddbeed3901e976f5a" > $HOME/.buildozer/android/platform/android-sdk/licenses/intel-android-extra-license
+        # Accept licenses
+        mkdir -p licenses
+        echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > licenses/android-sdk-license
+        echo "84831b9409646a918e30573bab4c9c91346d8abd" > licenses/android-sdk-preview-license
+        echo "d975f751698a77b662f1254ddbeed3901e976f5a" > licenses/intel-android-extra-license
     
     - name: Cache Buildozer global directory
       uses: actions/cache@v4
